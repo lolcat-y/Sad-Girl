@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Open Graph Metadata for Discord & Socials -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Зло" />
+  <meta property="og:description" content="Enter the void. She's still hanging." />
+  <meta property="og:url" content="https://xx6.lol/" />
+  <meta property="og:image" content="https://media.discordapp.net/attachments/1305761732261707820/1354726583000371230/image.png?ex=67e656f2&is=67e50572&hm=0e5bf4d41334a4af33ebd406c221322fe074ab1bd40b869e7f858553fe5aa30e&=&format=webp&quality=lossless&width=1117&height=597" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>Зло</title> <!-- Evil -->
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #ffffff;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 200%;
+      width: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        #f1f1f1,
+        #f1f1f1 20px,
+        transparent 20px,
+        transparent 40px
+      );
+      z-index: -1;
+      transform: rotate(-5deg);
+      opacity: 0.2;
+    }
+    
+  * {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  ::selection {
+    background: transparent;
+    color: inherit;
+  }
+
+  .hanging-img {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+    .container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .swing-wrapper {
+      position: absolute;
+      top: 0;
+      transform-origin: top center;
+      transition: transform 0.15s ease-out;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .hanging-img {
+      display: block;
+      max-height: 100vh;
+      height: auto;
+      width: auto;
+    }
+
+    /* Skull emoji styles */
+    .skull {
+      position: fixed;
+      font-size: 20px;
+      opacity: 1;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 2s linear, opacity 2s ease-out;
+    }
+
+    iframe#sc-player {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="swing-wrapper" id="swing">
+      <img src="image.png" alt="Hanging Character" class="hanging-img">
+    </div>
+  </div>
+
+  <iframe
+    id="sc-player"
+    width="0"
+    height="0"
+    allow="autoplay"
+    frameborder="no"
+    allowtransparency="true"
+  ></iframe>
+
+  <script>
+    const wrapper = document.getElementById('swing');
+    const iframe = document.getElementById('sc-player');
+    const maxStrength = 15;
+    let hasActivatedMusic = false;
+
+    document.addEventListener('mousemove', (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 4;
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const maxDistance = window.innerWidth / 1.5;
+
+      const proximity = Math.max(0, 1 - distance / maxDistance);
+      const strength = maxStrength * proximity;
+
+      const rotateZ = -dx / window.innerWidth * strength * 2;
+      wrapper.style.transform = `rotate(${rotateZ}deg)`;
+
+      if (!hasActivatedMusic) {
+        hasActivatedMusic = true;
+        iframe.src = "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/bae-193431940/hydros-prod-snow&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false";
+      }
+    });
+
+    // Skull trail effect
+    let lastSpawnTime = 0;
+    const spawnDelay = 100;
+
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastSpawnTime < spawnDelay) return;
+      lastSpawnTime = now;
+
+      const skull = document.createElement('div');
+      skull.textContent = '☠';
+      skull.classList.add('skull');
+      skull.style.left = `${e.clientX}px`;
+      skull.style.top = `${e.clientY}px`;
+
+      document.body.appendChild(skull);
+
+      requestAnimationFrame(() => {
+        skull.style.transform = 'translateY(100px)';
+        skull.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        skull.remove();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
